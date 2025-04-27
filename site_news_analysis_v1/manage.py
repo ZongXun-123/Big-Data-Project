@@ -21,5 +21,20 @@ def main():
 if __name__ == '__main__':
     main()
 
+#django-admin startproject website_configs(建立django專案)
 #python manage.py runserver 8000(執行伺服器)
-#python manage.py startapp app_key_person 
+#python manage.py startapp app_key_person (django-admin startapp app_taiwan_mayor)
+
+#讓命令列可以與conda虛擬環境整合。
+#$>conda init powershell
+
+#Create a virtual environment
+#conda create -n name python=3.11(版本)
+
+#看看有那些虛擬環境
+#conda env list
+
+#進入和離開虛擬環境
+#activate my_env(name)
+#conda activate my_env(name)
+#deactivate
