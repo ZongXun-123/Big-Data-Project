@@ -27,6 +27,9 @@ urlpatterns = [
     path('userkeyword_assoc/', include('app_user_keyword_association.urls')),
     path('userkeyword_senti/', include('app_user_keyword_sentiment.urls')),
     path('taiwanmayor/', include('app_taiwan_mayor.urls')),
+    path('userkeyword_db/', include('app_user_keyword_db.urls')),
+    path('topperson_db/', include('app_top_person_db.urls')),
+    path('admin/', admin.site.urls),
     path('', include('app_top_keyword.urls')),
     path('', include('app_top_person.urls')),
     path('', include('app_user_keyword.urls')),
@@ -34,5 +37,7 @@ urlpatterns = [
     path('', include('app_user_keyword_association.urls')),
     path('', include('app_user_keyword_sentiment.urls')),
     path('', include('app_taiwan_mayor.urls')),
+    path('', include('app_user_keyword_db.urls')),
+    path('', include('app_top_person_db.urls')),
     path('', home),
 ]

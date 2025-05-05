@@ -8,7 +8,7 @@ urlpatterns = [
     
     # the first way:
     path('', views.home, name='home'),
-    path('api_get_top_userkey/', views.api_get_top_userkey),
+    path('api_get_top_userkey/', views.api_get_top_userkey ,name='api_get_userkey_data'),
 
     # the second way:
     #path('top_userkey/', views.home, name='home'),

@@ -1,114 +1,648 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="zh-TW">
-  <head>
-    <title>
-      {% block title %}
-        輿情分析平台
-      {% endblock %}
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    {% block extra_css %}
+<head>
+  <title>
+    {% block title %}
+      輿情分析平台
     {% endblock %}
-  </head>
-  <body>
+  </title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:#859ccf;
+      --primary-dark:hsl(209, 32.10%, 59.00%);
+      --secondary: #475569;
+      --accent: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --light:hsl(210, 83.50%, 81.00%);
+      --dark: #0f172a;
+      --gray-100:hsl(210, 36.30%, 60.00%);
+      --gray-200:hsl(214, 8.00%, 65.90%);
+      --gray-300:hsl(214, 23.80%, 75.30%);
+      --gray-800: #1e293b;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 
+                  0 1px 6px -1px rgba(0, 0, 0, 0.02);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      padding: 0.75rem 0;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary) !important;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .brand-mark {
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      color: white;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+    
+    .nav-link {
+      font-weight: 500;
+      color: var(--secondary) !important;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      margin: 0 0.2rem;
+    }
+    
+    .nav-link:hover {
+      color: var(--primary) !important;
+      background-color: rgba(37, 99, 235, 0.05);
+    }
+    
+    .nav-link.active {
+      color: var(--primary) !important;
+      background-color: rgba(37, 99, 235, 0.08);
+    }
+    
+    .dropdown-menu {
+      border-radius: 12px;
+      border: 1px solid var(--gray-200);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
+                  0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      padding: 0.75rem;
+      min-width: 260px;
+    }
+    
+    .dropdown-item {
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.15s ease;
+      color: var(--gray-800);
+    }
+    
+    .dropdown-item:hover {
+      background-color: rgba(37, 99, 235, 0.05);
+      color: var(--primary);
+    }
+    
+    .dropdown-item i {
+      color: var(--secondary);
+      font-size: 0.9rem;
+      width: 16px;
+      text-align: center;
+    }
+    
+    .dropdown-item:hover i {
+      color: var(--primary);
+    }
+    
+    .dropdown-item.active-green {
+      color: var(--success);
+    }
+    
+    .dropdown-item.active-green i {
+      color: var(--success);
+    }
+    
+    .dropdown-item.active-green:hover {
+      color: var(--success);
+      background-color: rgba(16, 185, 129, 0.05);
+    }
+    
+    .dropdown-divider {
+      margin: 0.5rem 0;
+      border-color: var(--gray-200);
+    }
+    
+    .main-container {
+      padding: 2.5rem 0;
+      min-height: calc(100vh - 200px);
+    }
+    
+    .hero-section {
+      background: linear-gradient(120deg, #f0f9ff, #e0f2fe);
+      border-radius: 16px;
+      padding: 3rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    .card-header {
+      background-color: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+    
+    .btn-outline-primary {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline-primary:hover {
+      background-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    }
+    
+    .footer {
+      background-color: white;
+      border-top: 1px solid var(--gray-200);
+      padding: 2.5rem 0;
+      color: var(--secondary);
+    }
+    
+    .footer-brand {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+    
+    .footer-links h6 {
+      color: var(--dark);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-links a {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+    
+    .footer-bottom {
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--gray-200);
+      font-size: 0.875rem;
+    }
+    
+    @media (max-width: 992px) {
+      .navbar-collapse {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        margin-top: 0.5rem;
+      }
+      
+      .nav-link {
+        margin: 0.2rem 0;
+      }
+      
+      .dropdown-menu {
+        box-shadow: none;
+        border: 1px solid var(--gray-200);
+        margin-left: 1rem;
+      }
+      
+      .hero-section {
+        padding: 2rem 1.5rem;
+      }
+    }
+    
+    /* 功能卡片樣式 */
+    .feature-card {
+      height: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+    }
+    
+    .feature-icon {
+      height: 48px;
+      width: 48px;
+      background-color: rgba(37, 99, 235, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+  </style>
+  {% block extra_css %}
+  {% endblock %}
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-      <div class="row">
-        <!-- Navigation Bar -->
-        <div class="col-lg-12 mb-2 mt-2">
-          <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="/">輿情大數據</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <!-- 基礎熱門分析 -->
-                  <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">熱門分析</button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="{% url 'app_top_keyword:home' %}"style="color: green">熱門關鍵詞分析</a>
-                      <a class="dropdown-item" href="{% url 'app_top_person:home' %}"style="color: green">熱門人物排行分析</a>
-                      <a class="dropdown-item" href="#">命名實體熱門分析</a>
-                      <a class="dropdown-item" href="#" style="color: green">昨日誰最大</a>
-                    </div>
-                  </div>
-                  <!-- 特色分析 -->
-                  <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">特色分析</button>
-                    <div class="dropdown-menu">
-                      <a class="nav-link" href="{% url 'app_key_person:home' %}" style="color: green">賴清德聲量</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="nav-link" href="{% url 'app_taiwan_mayor:home' %}" style="color: green">台灣政黨代表人物聲量觀測站</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="nav-link" href="#">政黨聲量排行榜</a>
-                      <a class="nav-link" href="#">政治人物聲量排行榜</a>
-                      <a class="nav-link" href="{% url 'app_user_keyword:home' %}"style="color: green">關鍵詞熱門度分析</a>
-                      <a class="nav-link" href="{% url 'app_user_keyword_association:home' %}"style="color: green">全文檢索與關聯新聞分析</a>
-                      <a class="nav-link" href="{% url 'app_user_keyword_sentiment:home' %}"style="color: green">關鍵詞情感分析</a>
-                      <div class="dropdown-divider"></div>
-
-                      <a class="nav-link" href="#" style="color: green">事件人物聲量相關分析</a>
-                    </div>
-                  </div>
-
-                  <!-- 新聞推薦系統 -->
-                  <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">新聞推薦系統</button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Bert/Qwen新聞推薦-新聞查找相似新聞</a>
-                    </div>
-                  </div>
-
-                  <!-- NLP應用 -->
-                  <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">自然語言理解</button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">語言模型Bert/Qwen情緒分類</a>
-                      <a class="dropdown-item" href="#">語言模型Bert/Qwen新聞分類</a>
-                    </div>
-                  </div>
-
-                  <!-- 使用資料庫 -->
-                  <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">使用DB</button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">熱門人物資料庫查詢</a>
-                      <a class="dropdown-item" href="#">昨日新聞資料庫全文檢索</a>
-                    </div>
-                  </div>
-
-                  <!-- 關於 -->
-                  <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">關於</button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">課程介紹網頁</a>
-                      <a class="dropdown-item" href="#">如何使用輿情API</a>
-                    </div>
-                  </div>
-                </ul>
-              </div>
-            </div>
-          </nav>
+      <a class="navbar-brand" href="/">
+        <div class="brand-mark">
+          <i class="fas fa-chart-line"></i>
         </div>
-
-        <!-- End of Navigation Bar -->
-
-        <!-- Main Content -->
-        {% block content %}
-
-        {% endblock %}
+        輿情大數據
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <!-- 熱門分析 -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              熱門分析
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item active-green" href="{% url 'app_top_keyword:home' %}">
+                <i class="fas fa-key"></i>
+                <span>熱門關鍵詞分析</span>
+              </a></li>
+              <li><a class="dropdown-item active-green" href="{% url 'app_top_person:home' %}">
+                <i class="fas fa-users"></i>
+                <span>熱門人物排行分析</span>
+              </a></li>
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-tag"></i>
+                <span>命名實體熱門分析</span>
+              </a></li>
+              <li><a class="dropdown-item active-green" href="#">
+                <i class="fas fa-trophy"></i>
+                <span>昨日誰最大</span>
+              </a></li>
+            </ul>
+          </li>
+          
+          <!-- 特色分析 -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              特色分析
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item active-green" href="{% url 'app_key_person:home' %}">
+                <i class="fas fa-user"></i>
+                <span>賴清德聲量</span>
+              </a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item active-green" href="{% url 'app_taiwan_mayor:home' %}">
+                <i class="fas fa-landmark"></i>
+                <span>台灣政黨代表人物聲量觀測站</span>
+              </a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-balance-scale"></i>
+                <span>政黨聲量排行榜</span>
+              </a></li>
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-user-tie"></i>
+                <span>政治人物聲量排行榜</span>
+              </a></li>
+              <li><a class="dropdown-item active-green" href="{% url 'app_user_keyword:home' %}">
+                <i class="fas fa-search"></i>
+                <span>關鍵詞熱門度分析</span>
+              </a></li>
+              <li><a class="dropdown-item active-green" href="{% url 'app_user_keyword_association:home' %}">
+                <i class="fas fa-project-diagram"></i>
+                <span>全文檢索與關聯新聞分析</span>
+              </a></li>
+              <li><a class="dropdown-item active-green" href="{% url 'app_user_keyword_sentiment:home' %}">
+                <i class="fas fa-smile"></i>
+                <span>關鍵詞情感分析</span>
+              </a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item active-green" href="#">
+                <i class="fas fa-users-cog"></i>
+                <span>事件人物聲量相關分析</span>
+              </a></li>
+            </ul>
+          </li>
+          
+          <!-- 新聞推薦系統 -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              新聞推薦
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-brain"></i>
+                <span>Bert/Qwen新聞推薦-新聞查找相似新聞</span>
+              </a></li>
+            </ul>
+          </li>
+          
+          <!-- NLP應用 -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              自然語言理解
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-smile-beam"></i>
+                <span>語言模型Bert/Qwen情緒分類</span>
+              </a></li>
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-newspaper"></i>
+                <span>語言模型Bert/Qwen新聞分類</span>
+              </a></li>
+            </ul>
+          </li>
+          
+          <!-- 使用資料庫 -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              使用DB
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item active-green" href="{% url 'app_user_keyword_db:home' %}">
+                <i class="fas fa-search"></i>
+                <span>自訂全文檢索與關聯分析db</span>
+              </a></li>
+              <li><a class="dropdown-item active-green" href="{%  url 'app_top_person_db:home' %}">
+                <i class="fas fa-search"></i>
+                <span>熱門人物(從資料庫查詢)</span>
+              </a></li>
+              <li><a class="dropdown-item active-green" href="{% url 'app_top_person_db:calculate_top_person' %}">
+                <i class="fas fa-search"></i>
+                <span>熱門人物立刻計算(管理者定時執行)</span>
+              </a></li>
+            </ul>
+          </li>
+          
+          <!-- 關於 -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              關於
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-book"></i>
+                <span>課程介紹網頁</span>
+              </a></li>
+              <li><a class="dropdown-item" href="#">
+                <i class="fas fa-code"></i>
+                <span>如何使用輿情API</span>
+              </a></li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
+  </nav>
 
-    <!-- Bootstrap 5 JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Additional Scripts -->
-    {% block extra_js %}
+  <!-- Main Content Container -->
+  <div class="container main-container">
+    {% block content %}
+    <!-- 預設首頁內容 -->
+    <div class="hero-section">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h1 class="fw-bold mb-4">數據驅動的輿情分析</h1>
+          <p class="lead mb-4">透過大數據分析技術，即時掌握媒體及社群平台的輿論趨勢，深入了解關鍵人物、事件與社會聲量。</p>
+          <div class="d-flex gap-3">
+            <a href="#" class="btn btn-primary">開始使用</a>
+            <a href="#" class="btn btn-outline-primary">了解更多</a>
+          </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block">
+          <img src="/api/placeholder/500/350" class="img-fluid rounded" alt="輿情分析示意圖">
+        </div>
+      </div>
+    </div>
+    
+    <!-- 功能區塊 -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="fw-bold mb-4">主要功能</h2>
+      </div>
+    </div>
+    
+    <div class="row g-4">
+      <!-- 熱門分析卡片 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card p-4">
+          <div class="feature-icon">
+            <i class="fas fa-fire"></i>
+          </div>
+          <h4 class="fw-bold mb-3">熱門關鍵詞分析</h4>
+          <p class="text-secondary mb-3">追蹤並分析當前最受關注的話題和趨勢，掌握輿論焦點。</p>
+          <a href="{% url 'app_top_keyword:home' %}" class="btn btn-sm btn-outline-primary">立即查看</a>
+        </div>
+      </div>
+
+      <!-- 人物聲量卡片 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card p-4">
+          <div class="feature-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h4 class="fw-bold mb-3">政治人物聲量分析</h4>
+          <p class="text-secondary mb-3">深入分析政治人物的媒體曝光度與社會討論度。</p>
+          <a href="{% url 'app_key_person:home' %}" class="btn btn-sm btn-outline-primary">立即查看</a>
+        </div>
+      </div>
+
+      <!-- 情感分析卡片 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card p-4">
+          <div class="feature-icon">
+            <i class="fas fa-smile"></i>
+          </div>
+          <h4 class="fw-bold mb-3">關鍵詞情感分析</h4>
+          <p class="text-secondary mb-3">透過AI技術分析新聞情緒傾向，掌握輿論情感走向。</p>
+          <a href="{% url 'app_user_keyword_sentiment:home' %}" class="btn btn-sm btn-outline-primary">立即查看</a>
+        </div>
+      </div>
+
+      <!-- 關聯分析卡片 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card p-4">
+          <div class="feature-icon">
+            <i class="fas fa-project-diagram"></i>
+          </div>
+          <h4 class="fw-bold mb-3">關聯新聞分析</h4>
+          <p class="text-secondary mb-3">探索新聞事件之間的關聯性，掌握議題發展脈絡。</p>
+          <a href="{% url 'app_user_keyword_association:home' %}" class="btn btn-sm btn-outline-primary">立即查看</a>
+        </div>
+      </div>
+
+      <!-- 政黨觀測卡片 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card p-4">
+          <div class="feature-icon">
+            <i class="fas fa-landmark"></i>
+          </div>
+          <h4 class="fw-bold mb-3">政黨聲量觀測</h4>
+          <p class="text-secondary mb-3">追蹤台灣各政黨代表人物的媒體曝光度變化。</p>
+          <a href="{% url 'app_taiwan_mayor:home' %}" class="btn btn-sm btn-outline-primary">立即查看</a>
+        </div>
+      </div>
+
+      <!-- AI推薦卡片 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card p-4">
+          <div class="feature-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h4 class="fw-bold mb-3">AI新聞推薦</h4>
+          <p class="text-secondary mb-3">基於先進語言模型的相似新聞推薦系統。</p>
+          <a href="#" class="btn btn-sm btn-outline-primary">立即查看</a>
+        </div>
+      </div>
+    </div>
     {% endblock %}
-  </body>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <a href="/" class="footer-brand">
+            <div class="d-flex align-items-center">
+              <div class="brand-mark me-2">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              輿情大數據
+            </div>
+          </a>
+          <p class="mb-4">提供最先進的新聞輿情分析、輿論趨勢觀測及人物聲量監測服務。</p>
+        </div>
+        <div class="col-sm-6 col-lg-2 mb-4 mb-lg-0">
+          <div class="footer-links">
+            <h6>熱門分析</h6>
+            <ul>
+              <li><a href="{% url 'app_top_keyword:home' %}">熱門關鍵詞</a></li>
+              <li><a href="{% url 'app_top_person:home' %}">熱門人物排行</a></li>
+              <li><a href="#">昨日誰最大</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2 mb-4 mb-lg-0">
+          <div class="footer-links">
+            <h6>特色分析</h6>
+            <ul>
+              <li><a href="{% url 'app_key_person:home' %}">賴清德聲量</a></li>
+              <li><a href="{% url 'app_user_keyword_sentiment:home' %}">關鍵詞情感分析</a></li>
+              <li><a href="{% url 'app_user_keyword_association:home' %}">關聯新聞分析</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2 mb-4 mb-lg-0">
+          <div class="footer-links">
+            <h6>資源</h6>
+            <ul>
+              <li><a href="#">課程介紹</a></li>
+              <li><a href="#">輿情API使用指南</a></li>
+              <li><a href="#">技術文件</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2 mb-4 mb-lg-0">
+          <div class="footer-links">
+            <h6>聯絡我們</h6>
+            <ul>
+              <li><a href="#">關於我們</a></li>
+              <li><a href="#">合作提案</a></li>
+              <li><a href="#">意見回饋</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row footer-bottom">
+        <div class="col-md-6">
+          <p class="mb-md-0">© 2025 輿情大數據分析平台. 保留所有權利。</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p>資料僅供學術研究使用</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <!-- Additional Scripts -->
+  {% block extra_js %}
+  {% endblock %}
+</body>
 </html>
