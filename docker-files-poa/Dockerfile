@@ -1,11 +1,11 @@
 # 使用官方 Python 基礎映像檔含有Debian作業系統
-FROM python:3.10
+FROM python:3.11
 
 # 設定工作目錄
 WORKDIR /app
 
-# 升級 pip
-RUN pip install --upgrade pip setuptools wheel
+# 升級 pip 並安裝兼容的 setuptools
+RUN pip install --upgrade pip setuptools==65.5.0 wheel
 
 # 複製專案檔案
 COPY django-web-poa /app/
